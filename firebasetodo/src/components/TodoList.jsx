@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {IoIosAddCircleOutline} from 'react-icons/io'
 import Todo from './Todo'
+import {db} from './../firebase'
+import {query, collection, onSnapshot} from 'firebase/firestore'
 
 const style = {
   // bg: `h-screen w-screen p-4 bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 ...`
@@ -14,7 +16,27 @@ const style = {
 }
 
 const TodoList = () => {
-  const [todos, setTodos] = useState(['study', 'clean']) 
+  const [todos, setTodos] = useState([]) 
+
+  //Create todo
+  //Read todo from Firebase
+  useEffect(()=>{
+    //define a path for the database
+    const q = query(collection(db, 'todos'))
+    //take a snapshot of firebase and read it out on the screen
+    const unsubsribe = onSnapshot(q, (querySnapshot)=> {
+      let todosArr =[]
+      querySnapshot.forEach((listItem)=>{
+        todosArr.push({...listItem.data(), id: listItem.id})  //pushing each obj in our array into the new array
+      });
+      setTodos(todosArr)
+    })
+    return () => unsubsribe()
+
+  },[])
+  //Update todo in firebase
+  //Delete todo
+
   return (
     <div>
       <div className={style.container}>

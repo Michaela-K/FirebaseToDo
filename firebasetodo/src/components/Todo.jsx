@@ -20,7 +20,7 @@ const Todo = ({todos}) => {
       <div className={style.row}>
         <div className={style.rowInner}>
           <input type="checkbox"/>
-          <p className={style.text}>{todos}</p>
+          <p className={style.text}>{todos.text}</p>
         </div>
         <div className={style.rowInner2}>
           <button>{<MdOutlineModeEditOutline  size={23} color="blue"/>}</button>
