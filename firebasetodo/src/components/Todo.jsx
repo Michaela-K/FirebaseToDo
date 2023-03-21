@@ -13,14 +13,15 @@ const style = {
   button: `cursor-pointer flex items-center `,
 };
 
-const Todo = ({todos}) => {
+const Todo = ({todos, toggleComplete}) => {
 
+  //completed comes from the firebase database 
   return (
-    <li className={style.li}>
+    <li className={todos.completed ? style.liComplete : style.li}> 
       <div className={style.row}>
         <div className={style.rowInner}>
-          <input type="checkbox"/>
-          <p className={style.text}>{todos.text}</p>
+          <input onChange={()=> toggleComplete(todos)} type="checkbox" checked={todos.completed ? 'checked' : ''}/>
+          <p onClick={()=> toggleComplete(todos)} className={todos.completed ? style.textComplete : style.text}>{todos.text}</p>
         </div>
         <div className={style.rowInner2}>
           <button>{<MdOutlineModeEditOutline  size={23} color="blue"/>}</button>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import {IoIosAddCircleOutline} from 'react-icons/io'
 import Todo from './Todo'
 import {db} from './../firebase'
-import {query, collection, onSnapshot} from 'firebase/firestore'
+import {query, collection, onSnapshot, updateDoc, doc, addDoc} from 'firebase/firestore'
 
 const style = {
   // bg: `h-screen w-screen p-4 bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 ...`
@@ -16,9 +16,24 @@ const style = {
 }
 
 const TodoList = () => {
-  const [todos, setTodos] = useState([]) 
+  const [todos, setTodos] = useState([]);
+  const [input, setInput] = useState(' ');
 
   //Create todo
+  const createTodo =async(e) => {
+    e.preventDefault(e)
+    if(input === ''){
+      alert("Please enter a valid To Do List Item")
+      return
+    }
+    await addDoc(collection(db, 'todos'),{  //here it adds to the database or creates a database named "todos" if it doesnt exist
+      text: input,
+      completed: false,  //default to false
+    })
+    setInput('')  //????
+  }
+
+
   //Read todo from Firebase
   useEffect(()=>{
     //define a path for the database
@@ -34,7 +49,16 @@ const TodoList = () => {
     return () => unsubsribe()
 
   },[])
+
+
   //Update todo in firebase
+  const toggleComplete = async(todos) => {
+    await updateDoc(doc(db, 'todos', todos.id),{  //doc refers to listItem
+      completed: !todos.completed
+    })
+  }
+
+
   //Delete todo
 
   return (
@@ -43,15 +67,15 @@ const TodoList = () => {
         <div>
           <h3 className={style.heading}>To Do List</h3>
           <p className={style.count}>{`You have ${todos.length} items left`}</p>
-          <form className={style.form}>
-            <input type="text" className={style.input} placeholder="Another thing to do"/>
-            <button className={style.button}>
+          <form onSubmit={createTodo} className={style.form}>
+            <input type="text" onChange={(e)=> setInput(e.target.value)} className={style.input} placeholder="Another thing to do"/>
+            <button onClick={createTodo} className={style.button}>
               {<IoIosAddCircleOutline size={40}/>}
             </button>
           </form>
           <ul>
           {todos.map((todos, index) =>(
-              <Todo key={index} todos={todos} />
+              <Todo key={index} todos={todos} toggleComplete={toggleComplete}/>
             ))}
           </ul>
         </div>
