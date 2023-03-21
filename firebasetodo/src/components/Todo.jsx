@@ -13,7 +13,7 @@ const style = {
   button: `cursor-pointer flex items-center `,
 };
 
-const Todo = ({todos, toggleComplete}) => {
+const Todo = ({todos, toggleComplete, deleteTodo}) => {
 
   //completed comes from the firebase database 
   return (
@@ -25,7 +25,7 @@ const Todo = ({todos, toggleComplete}) => {
         </div>
         <div className={style.rowInner2}>
           <button>{<MdOutlineModeEditOutline  size={23} color="blue"/>}</button>
-          <button>{<IoTrashOutline size={23} color="crimson"/>}</button>
+          <button onClick={() => deleteTodo(todos.id)}>{<IoTrashOutline size={23} color="crimson"/>}</button>
         </div>
       </div>
     </li>

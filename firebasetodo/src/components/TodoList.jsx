@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import {IoIosAddCircleOutline} from 'react-icons/io'
 import Todo from './Todo'
 import {db} from './../firebase'
-import {query, collection, onSnapshot, updateDoc, doc, addDoc} from 'firebase/firestore'
+import {query, collection, onSnapshot, updateDoc, doc, addDoc, deleteDoc} from 'firebase/firestore'
 
 const style = {
   // bg: `h-screen w-screen p-4 bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 ...`
@@ -60,6 +60,9 @@ const TodoList = () => {
 
 
   //Delete todo
+  const deleteTodo = async(id)=>{
+    await deleteDoc(doc(db, 'todos', id))
+  }
 
   return (
     <div>
@@ -75,7 +78,7 @@ const TodoList = () => {
           </form>
           <ul>
           {todos.map((todos, index) =>(
-              <Todo key={index} todos={todos} toggleComplete={toggleComplete}/>
+              <Todo key={index} todos={todos} toggleComplete={toggleComplete} deleteTodo={deleteTodo}/>
             ))}
           </ul>
         </div>
