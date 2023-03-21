@@ -18,6 +18,7 @@ const style = {
 const TodoList = () => {
   const [todos, setTodos] = useState([]);
   const [input, setInput] = useState(' ');
+  const [newInput, setNewInput] = useState(false)
 
   //Create todo
   const createTodo =async(e) => {
@@ -51,11 +52,27 @@ const TodoList = () => {
   },[])
 
 
-  //Update todo in firebase
+  //Update Completed status of todo in firebase
   const toggleComplete = async(todos) => {
     await updateDoc(doc(db, 'todos', todos.id),{  //doc refers to listItem
       completed: !todos.completed
     })
+  }
+
+  //Edit the Todo Item
+  const editTodo = async(todos) =>{
+    console.log(todos.text)
+    setInput(todos.text)
+    setNewInput(true)
+    // if(input === ''){
+    //   alert("Please enter a valid To Do List Item")
+    //   return
+    // }
+
+    // await updateDoc(doc(db, 'todo', todos.text),{
+    //   text: todos.text,
+    //   completed: false,
+    // })
   }
 
 
@@ -78,7 +95,7 @@ const TodoList = () => {
           </form>
           <ul>
           {todos.map((todos, index) =>(
-              <Todo key={index} todos={todos} toggleComplete={toggleComplete} deleteTodo={deleteTodo}/>
+              <Todo key={index} todos={todos} toggleComplete={toggleComplete} deleteTodo={deleteTodo} editTodo={editTodo} newInput={newInput} setNewInput={setNewInput}/>
             ))}
           </ul>
         </div>

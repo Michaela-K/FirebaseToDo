@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {IoTrashOutline} from 'react-icons/io5'
 import {MdOutlineModeEditOutline} from 'react-icons/md'
+import Editbox from './Editbox';
 
 const style = {
   li: `flex justify-between bg-slate-200 p-4 my-2 capitalize rounded-md`,
@@ -13,7 +14,7 @@ const style = {
   button: `cursor-pointer flex items-center `,
 };
 
-const Todo = ({todos, toggleComplete, deleteTodo}) => {
+const Todo = ({todos, toggleComplete, deleteTodo, editTodo, newInput, setNewInput}) => {
 
   //completed comes from the firebase database 
   return (
@@ -24,10 +25,11 @@ const Todo = ({todos, toggleComplete, deleteTodo}) => {
           <p onClick={()=> toggleComplete(todos)} className={todos.completed ? style.textComplete : style.text}>{todos.text}</p>
         </div>
         <div className={style.rowInner2}>
-          <button>{<MdOutlineModeEditOutline  size={23} color="blue"/>}</button>
+          <button onClick={() => editTodo(todos)}>{<MdOutlineModeEditOutline  size={23} color="blue"/>}</button>
           <button onClick={() => deleteTodo(todos.id)}>{<IoTrashOutline size={23} color="crimson"/>}</button>
         </div>
       </div>
+      {newInput === true && <Editbox todos={todos} editTodo={editTodo} setNewInput={setNewInput}/>}
     </li>
   )
 }
